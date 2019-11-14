@@ -62,7 +62,7 @@ def upload():
             # pil = StringIO(imgfile)
             # pil = Image.open(pil)
             # print 'imgfile:', imgfile
-            img = cv2.imdecode(numpy.fromstring(imgfile.read(), numpy.uint8), cv2.CV_LOAD_IMAGE_UNCHANGED)
+            img = cv2.imdecode(numpy.fromstring(imgfile.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
             report_data = ImageFilter(image=img).ocr(22)
             if report_data == None:
                 data = {
@@ -111,7 +111,7 @@ def image_upload():
 
     #print('{0},{1}'.format(base64image,fileName))
 
-    img = cv2.imdecode(numpy.fromstring(img_read.read(), numpy.uint8), cv2.IMAGE_UNCHANGED)
+    img = cv2.imdecode(numpy.fromstring(img_read.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
     report_data = ImageFilter(image=img).ocr(22)
     print(report_data)
     if report_data == None:
