@@ -147,7 +147,7 @@ class ImageFilter:
 
         #检测出的线数量不对就返回-1跳出
         if len(line) != 3:
-            print "it is not a is Report!,len(line) =",len(line)
+            print ("it is not a is Report!,len(line) =",len(line))
             return None
         
         def distance_line(i, j):
