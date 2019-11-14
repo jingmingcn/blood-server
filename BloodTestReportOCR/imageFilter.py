@@ -199,7 +199,7 @@ class ImageFilter:
     # 通过计算夹角来检测是否有缺失一角的情况
     ref_angle = 1
     if detectmiss(line, line_lower, ref_angle):
-        print "it is not a complete Report!"
+        print ("it is not a complete Report!")
         return None
 
         # 由表头和表尾确定目标区域的位置
