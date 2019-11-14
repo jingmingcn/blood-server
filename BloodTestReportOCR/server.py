@@ -5,7 +5,7 @@ import json
 from io import StringIO
 import base64
 import bson
-import opencv-python
+import opencv
 import flask
 import numpy
 from PIL import Image
