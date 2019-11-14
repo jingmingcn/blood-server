@@ -119,7 +119,8 @@ def image_upload():
             "error": 1,
         }
         return jsonify(data)
-
+    else
+        return jsonify(report_data)
 '''
     根据图像oid，在mongodb中查询，并返回Binary对象
 '''
