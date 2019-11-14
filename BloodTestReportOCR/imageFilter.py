@@ -174,7 +174,7 @@ class ImageFilter:
         # 由三条线来确定表头的位置和表尾的位置
         line_upper, line_lower = findhead(line[2],line[1],line[0])
 
-	def detectmiss(line, line_lower, ref_angle):
+    def detectmiss(line, line_lower, ref_angle):
 	    vector = []
 	    j = 0
 	    if linecmp(line[1], line_lower):
