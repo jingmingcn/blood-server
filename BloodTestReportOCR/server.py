@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from cStringIO import StringIO
+from io import StringIO
 import base64
 import bson
 import cv2
