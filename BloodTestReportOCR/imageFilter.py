@@ -200,42 +200,42 @@ class ImageFilter:
     ref_angle = 1
     if detectmiss(line, line_lower, ref_angle):
         print ("it is not a complete Report!")
-        #return None
+        return None
 
-        # 由表头和表尾确定目标区域的位置
+    # 由表头和表尾确定目标区域的位置
 
-        # 利用叉乘的不可交换性确定起始点
-        total_width = line_upper[1]-line_upper[0]
-        total_hight = line_lower[0]-line_upper[0]
-        cross_prod = cross(total_width, total_hight)
-        if cross_prod <0:
-            temp = line_upper[1]
-            line_upper[1] = line_upper[0]
-            line_upper[0] = temp
-            temp = line_lower[1]
-            line_lower[1] = line_lower[0]
-            line_lower[0] = temp
+    # 利用叉乘的不可交换性确定起始点
+    total_width = line_upper[1]-line_upper[0]
+    total_hight = line_lower[0]-line_upper[0]
+    cross_prod = cross(total_width, total_hight)
+    if cross_prod <0:
+        temp = line_upper[1]
+        line_upper[1] = line_upper[0]
+        line_upper[0] = temp
+        temp = line_lower[1]
+        line_lower[1] = line_lower[0]
+        line_lower[0] = temp
 
-        #由于需要表格外的数据，所以变换区域需要再向上和向下延伸
-        left_axis = line_lower[0] - line_upper[0]
-        right_axis = line_lower[1] - line_upper[1]
-        line_upper[0] = line_upper[0] - left_axis * 2 / 15
-        line_upper[1] = line_upper[1] - right_axis * 2 / 15
-        line_lower[0] = line_lower[0] + left_axis * 2 / 15
-        line_lower[1] = line_lower[1] + right_axis * 2 / 15
+    #由于需要表格外的数据，所以变换区域需要再向上和向下延伸
+    left_axis = line_lower[0] - line_upper[0]
+    right_axis = line_lower[1] - line_upper[1]
+    line_upper[0] = line_upper[0] - left_axis * 2 / 15
+    line_upper[1] = line_upper[1] - right_axis * 2 / 15
+    line_lower[0] = line_lower[0] + left_axis * 2 / 15
+    line_lower[1] = line_lower[1] + right_axis * 2 / 15
 
-        #设定透视变换的矩阵
-        points = np.array([[line_upper[0][0], line_upper[0][1]], [line_upper[1][0], line_upper[1][1]], 
-                        [line_lower[0][0], line_lower[0][1]], [line_lower[1][0], line_lower[1][1]]],np.float32)
-        standard = np.array([[0,0], [1000, 0], [0, 760], [1000, 760]],np.float32)
+    #设定透视变换的矩阵
+    points = np.array([[line_upper[0][0], line_upper[0][1]], [line_upper[1][0], line_upper[1][1]], 
+                    [line_lower[0][0], line_lower[0][1]], [line_lower[1][0], line_lower[1][1]]],np.float32)
+    standard = np.array([[0,0], [1000, 0], [0, 760], [1000, 760]],np.float32)
 
-        #使用透视变换将表格区域转换为一个1000*760的图
-        PerspectiveMatrix = cv2.getPerspectiveTransform(points,standard)
-        self.PerspectiveImg = cv2.warpPerspective(self.img, PerspectiveMatrix, (1000, 760))
+    #使用透视变换将表格区域转换为一个1000*760的图
+    PerspectiveMatrix = cv2.getPerspectiveTransform(points,standard)
+    self.PerspectiveImg = cv2.warpPerspective(self.img, PerspectiveMatrix, (1000, 760))
 
-        #输出透视变换后的图片
-        cv2.imwrite(self.output_path + 'region.jpg', self.PerspectiveImg)
-        return self.PerspectiveImg
+    #输出透视变换后的图片
+    cv2.imwrite(self.output_path + 'region.jpg', self.PerspectiveImg)
+    return self.PerspectiveImg
         
     '''
         filter函数返回img经过透视过后的PIL格式的Image对象，如果缓存中有PerspectivImg则直接使用，没有先进行透视
