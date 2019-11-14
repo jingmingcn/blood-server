@@ -25,7 +25,7 @@ class ImageFilter:
     def __init__(self, image, imagepath='origin_pics/bloodtestreport2.jpg'):
         self.img = image
         if image is None:
-            print 'img init from',imagepath
+            print ('img init from',imagepath)
             self.img = cv2.imread(imagepath)
 
         self.PerspectiveImg = None
