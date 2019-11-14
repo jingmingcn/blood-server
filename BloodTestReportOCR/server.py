@@ -32,7 +32,7 @@ def save_file(file_str, f, report_data):
 
     try:
         mime = Image.open(content).format.lower()
-        print 'content of mime is：', mime
+        print('content of mime is：', mime)
         if mime not in app.config['ALLOWED_EXTENSIONS']:
             raise IOError()
     except IOError:
