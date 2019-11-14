@@ -104,7 +104,7 @@ def image_upload():
     fileName = request.values['name']
     
     imgfile = open(fileName, 'wb')
-    imgfile.write(base64.decodestring(base64image))
+    imgfile.write(base64.decodestring(base64image.encode()))
     imgfile.close()
     
     img_read = open(fileName,'rb')
