@@ -148,13 +148,13 @@ def get_report(fid):
         if file is None:
             raise bson.errors.InvalidId()
 
-        print 'type before transform:\n', type(file['report_data'])
+        print ('type before transform:\n', type(file['report_data']))
 
         report_data = bson.json_util.dumps(file['report_data'])
 
-        print 'type after transform:\n', type(report_data)
+        print ('type after transform:\n', type(report_data))
         if report_data is None:
-            print 'report_data is NONE! Error!!!!'
+            print ('report_data is NONE! Error!!!!')
             return jsonify({"error": "can't ocr'"})
         return jsonify(report_data)
     except bson.errors.InvalidId:
