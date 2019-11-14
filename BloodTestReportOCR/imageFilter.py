@@ -200,7 +200,7 @@ class ImageFilter:
     ref_angle = 1
     if detectmiss(line, line_lower, ref_angle):
         print ("it is not a complete Report!")
-        return None
+        #return None
 
         # 由表头和表尾确定目标区域的位置
 
