@@ -109,9 +109,9 @@ def image_upload():
     
     img_read = open(fileName,'rb')
 
-    print('{0},{1}'.format(base64image,fileName))
+    #print('{0},{1}'.format(base64image,fileName))
 
-    img = cv2.imdecode(numpy.fromstring(img_read.read(), numpy.uint8), cv2.IMREAD_COLOR)
+    img = cv2.imdecode(numpy.fromstring(img_read.read(), numpy.uint8), cv2.IMAGE_UNCHANGED)
     report_data = ImageFilter(image=img).ocr(22)
     print(report_data)
     if report_data == None:
