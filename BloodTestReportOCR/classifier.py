@@ -22,6 +22,6 @@ if __name__ == '__main__':
 
     img = []
     if classifier.isReport(img) :
-        print 'classifier.isReport(img) is True'
+        print('classifier.isReport(img) is True')
     for i in range(33):
-        print classifier.getItemNum(img)
+        print(classifier.getItemNum(img))
