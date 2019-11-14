@@ -248,7 +248,7 @@ class ImageFilter:
             if self.PerspectiveImg is None:
                 return None
         if not(classifier.isReport(self.PerspectiveImg)):
-            print "it is not a is Report!",classifier.isReport(self.PerspectiveImg)
+            print ("it is not a is Report!",classifier.isReport(self.PerspectiveImg))
             return None
         try:
             Image.fromarray(self.PerspectivImg)
@@ -365,5 +365,5 @@ if __name__ == '__main__':
     imageFilter = ImageFilter() # 可以传入一个opencv格式打开的图片
     
     num = 22
-    print imageFilter.ocr(num)
+    print(imageFilter.ocr(num))
 
