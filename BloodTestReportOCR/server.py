@@ -72,7 +72,7 @@ def upload():
 
             with open('temp_pics/region.jpg') as f:
                 if f is None:
-                    print 'Error! f is None!'
+                    print ('Error! f is None!')
                 else:
 
                     '''
@@ -86,7 +86,7 @@ def upload():
                     #img_region = cv2.imdecode(numpy.fromstring(file_str, numpy.uint8), cv2.CV_LOAD_IMAGE_UNCHANGED)
                     #report_data = ImageFilter(image=img).ocr(22)
                     fid, filename = save_file(file_str, f, report_data)
-            print 'fid:', fid
+            print ('fid:', fid)
             if fid is not None:
                 templates = "<div><img id=\'filtered-report\' src=\'/file/%s\' class=\'file-preview-image\' width=\'100%%\' height=\'512\'></div>" % (
                     fid)
@@ -119,7 +119,7 @@ def image_upload():
             "error": 1,
         }
         return jsonify(data)
-    else
+    else:
         return jsonify(report_data)
 '''
     根据图像oid，在mongodb中查询，并返回Binary对象
