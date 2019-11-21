@@ -14,6 +14,7 @@ import pytesseract
 # import Binarization
 import imgproc
 from PIL import Image
+from matplotlib import pyplot as plt
 
 default = [3, 70, 30, 0.7, 0.0001]
 
@@ -25,7 +26,7 @@ class ImageFilter:
     def __init__(self, image, imagepath='origin_pics/bloodtestreport2.jpg'):
         self.img = image
         if image is None:
-            print ('img init from',imagepath)
+            print('img init from',imagepath)
             self.img = cv2.imread(imagepath)
 
         self.PerspectiveImg = None
@@ -58,7 +59,13 @@ class ImageFilter:
         closed = cv2.morphologyEx(img_gb, cv2.MORPH_CLOSE, kernel)
         opened = cv2.morphologyEx(closed, cv2.MORPH_OPEN, kernel)
         edges = cv2.Canny(opened, canny_param_lower , canny_param_upper)
-
+        
+        # plt.subplot(121),plt.imshow(self.img,cmap = 'gray')
+        # plt.title('Original Image'), plt.xticks([]), plt.yticks([])
+        # plt.subplot(122),plt.imshow(edges,cmap = 'gray')
+        # plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
+        # plt.show()
+        
         # 调用findContours提取轮廓
         contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -147,7 +154,7 @@ class ImageFilter:
 
         #检测出的线数量不对就返回-1跳出
         if len(line) != 3:
-            print ("it is not a is Report!,len(line) =",len(line))
+            print ("it is not a Report!,len(line) =",len(line))
             return None
         
         def distance_line(i, j):
@@ -174,27 +181,27 @@ class ImageFilter:
         # 由三条线来确定表头的位置和表尾的位置
         line_upper, line_lower = findhead(line[2],line[1],line[0])
 
-    def detectmiss(line, line_lower, ref_angle):
-        vector = []
-        j = 0
-        if linecmp(line[1], line_lower):
-            j = 1
-        elif linecmp(line[2], line_lower):
-            j = 2
+        def detectmiss(line, line_lower, ref_angle):
+            vector = []
+            j = 0
+            if linecmp(line[1], line_lower):
+                j = 1
+            elif linecmp(line[2], line_lower):
+                j = 2
 
-        lenth = len(line)
-        for i in range(lenth):
-            if i != j:
-                vector.append([line[j][0]-line[i][0], line[j][1]-line[i][1]])
-        vect1 = vector[0][0]
-        vect2 = vector[0][1]
-        vect3 = vector[1][0]
-        vect4 = vector[1][1]
-        angle1 = (math.acos(np.dot(vect3, vect1) / ((np.dot(vect1, vect1) ** 0.5) * (np.dot(vect3, vect3)**0.5))))/math.pi*180
-        angle2 = (math.acos(np.dot(vect4, vect2) / ((np.dot(vect2, vect2) ** 0.5) * (np.dot(vect4, vect4)**0.5))))/math.pi*180
-        if angle1 > ref_angle or angle2 > ref_angle:
-            return 1
-        return 0
+            lenth = len(line)
+            for i in range(lenth):
+                if i != j:
+                    vector.append([line[j][0]-line[i][0], line[j][1]-line[i][1]])
+            vect1 = vector[0][0]
+            vect2 = vector[0][1]
+            vect3 = vector[1][0]
+            vect4 = vector[1][1]
+            angle1 = (math.acos(np.dot(vect3, vect1) / ((np.dot(vect1, vect1) ** 0.5) * (np.dot(vect3, vect3)**0.5))))/math.pi*180
+            angle2 = (math.acos(np.dot(vect4, vect2) / ((np.dot(vect2, vect2) ** 0.5) * (np.dot(vect4, vect4)**0.5))))/math.pi*180
+            if angle1 > ref_angle or angle2 > ref_angle:
+                return 1
+            return 0
 
         # 通过计算夹角来检测是否有缺失一角的情况
         ref_angle = 1
@@ -225,9 +232,18 @@ class ImageFilter:
         line_lower[1] = line_lower[1] + right_axis * 2 / 15
 
         #设定透视变换的矩阵
-        points = np.array([[line_upper[0][0], line_upper[0][1]], [line_upper[1][0], line_upper[1][1]], 
-                        [line_lower[0][0], line_lower[0][1]], [line_lower[1][0], line_lower[1][1]]],np.float32)
-        standard = np.array([[0,0], [1000, 0], [0, 760], [1000, 760]],np.float32)
+        points = np.array([
+                          [line_upper[0][0], line_upper[0][1]],
+                          [line_upper[1][0], line_upper[1][1]], 
+                          [line_lower[0][0], line_lower[0][1]],
+                          [line_lower[1][0], line_lower[1][1]]
+                          ], np.float32)
+        standard = np.array([
+                            [0, 0],
+                            [1000, 0],
+                            [0, 760],
+                            [1000, 760]
+                            ],np.float32)
 
         #使用透视变换将表格区域转换为一个1000*760的图
         PerspectiveMatrix = cv2.getPerspectiveTransform(points,standard)
@@ -247,9 +263,9 @@ class ImageFilter:
             self.PerspectivImg = self.perspect(param)
             if self.PerspectiveImg is None:
                 return None
-        if not(classifier.isReport(self.PerspectiveImg)):
-            print ("it is not a is Report!",classifier.isReport(self.PerspectiveImg))
-            return None
+        # if not(classifier.isReport(self.PerspectiveImg)):
+        #     print ("it is not a Report!",classifier.isReport(self.PerspectiveImg))
+        #     return None
         try:
             Image.fromarray(self.PerspectivImg)
         except Exception:
@@ -332,9 +348,9 @@ class ImageFilter:
         # 识别
         def image_to_string(image, flag=True):
             if flag:
-                text = pytesseract.image_to_string(Image.fromarray(image), config='-psm 7 digits')
+                text = pytesseract.image_to_string(Image.fromarray(image), config='--psm 7 digits')
             else:
-                text = pytesseract.image_to_string(Image.fromarray(image), lang='chi_sim', config=' -psm 7 Bloodtest')
+                text = pytesseract.image_to_string(Image.fromarray(image), lang='chi_sim', config='--psm 7 Bloodtest')
             return text
 
         # 读取图片
@@ -362,8 +378,7 @@ class ImageFilter:
 
 # unit test
 if __name__ == '__main__':
-    imageFilter = ImageFilter() # 可以传入一个opencv格式打开的图片
-    
-    num = 22
-    print(imageFilter.ocr(num))
+    image = cv2.imread("origin_pics/bloodtestreport1.jpg")
+    imageFilter = ImageFilter(image=image) # 可以传入一个opencv格式打开的图片
+    print(imageFilter.ocr(22))
 

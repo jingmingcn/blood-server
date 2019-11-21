@@ -62,7 +62,7 @@ def upload():
             # pil = StringIO(imgfile)
             # pil = Image.open(pil)
             # print 'imgfile:', imgfile
-            img = cv2.imdecode(numpy.fromstring(imgfile.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
+            img = cv2.imdecode(numpy.frombuffer(imgfile.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
             report_data = ImageFilter(image=img).ocr(22)
             if report_data == None:
                 data = {
@@ -70,21 +70,22 @@ def upload():
                 }
                 return jsonify(data)
 
-            with open('temp_pics/region.jpg') as f:
+            with open('temp_pics/region.jpg', 'rb') as f:
                 if f is None:
-                    print ('Error! f is None!')
+                    print('Error! f is None!')
                 else:
 
                     '''
                         定义file_str存储矫正后的图片文件f的内容（str格式）,方便之后对图片做二次透视以及将图片内容存储至数据库中
                     '''
-                    file_str = f.read()
+                    file_str = f.read().decode(errors="ignore")
                     '''
                         使用矫正后的图片，将矫正后图片与识别结果（JSON数据）一并存入mongoDB，
                         这样前台点击生成报告时将直接从数据库中取出JSON数据，而不需要再进行图像透视，缩短生成报告的响应时间
                     '''
                     #img_region = cv2.imdecode(numpy.fromstring(file_str, numpy.uint8), cv2.CV_LOAD_IMAGE_UNCHANGED)
                     #report_data = ImageFilter(image=img).ocr(22)
+                    print('report_data===',report_data)
                     fid, filename = save_file(file_str, f, report_data)
             print ('fid:', fid)
             if fid is not None:
