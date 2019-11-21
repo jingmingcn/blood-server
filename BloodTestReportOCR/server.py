@@ -121,7 +121,9 @@ def image_upload():
         }
         return jsonify(data)
     else:
-        return json.dumps(report_data, ensure_ascii=False).encode('utf8')
+        json_response = json.dumps(report_data, ensure_ascii=False).encode('utf8')
+        response = Response(json_response,content_type="application/json; charset=utf-8" )
+        return response
 '''
     根据图像oid，在mongodb中查询，并返回Binary对象
 '''
