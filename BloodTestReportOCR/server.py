@@ -121,7 +121,7 @@ def image_upload():
         }
         return jsonify(data)
     else:
-        json_response = json.dumps(report_data, ensure_ascii=False).encode('utf8')
+        json_response = json.dumps(report_data, ensure_ascii=False)
         response = Response(json_response,content_type="application/json; charset=utf-8" )
         return response
 '''
