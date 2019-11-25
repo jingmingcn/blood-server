@@ -102,19 +102,18 @@ def upload():
 @app.route('/imageUpload',  methods=['POST'])
 def image_upload():
     base64image = request.values['image']
-    fileName = request.values['name']
+    fileName = app.config['TEMP_PATH']+request.values['name']
     
     imgfile = open(fileName, 'wb')
-    imgfile.write(base64.decodestring(base64image.encode()))
+    imgfile.write(base64.decodebytes(base64image.encode()))
     imgfile.close()
     
     img_read = open(fileName,'rb')
 
     #print('{0},{1}'.format(base64image,fileName))
 
-    img = cv2.imdecode(numpy.fromstring(img_read.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
+    img = cv2.imdecode(numpy.frombuffer(img_read.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
     report_data = ImageFilter(image=img).ocr(22)
-    print(report_data)
     if report_data == None:
         data = {
             "error": 1,
@@ -122,7 +121,7 @@ def image_upload():
         return jsonify(data)
     else:
         json_response = json.dumps(report_data, ensure_ascii=False)
-        response = Response(json_response,content_type="application/json; charset=utf-8" )
+        response = Response(json_response,content_type="application/json;charset=utf-8" )
         return response
 '''
     根据图像oid，在mongodb中查询，并返回Binary对象
