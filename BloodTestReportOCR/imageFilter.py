@@ -373,7 +373,7 @@ class ImageFilter:
             digtitstr = digtitstr.strip(".")
             data['bloodtest'][item_num]['value'] = digtitstr
         json_data = json.dumps(data,ensure_ascii=False,indent=4)
-        return json_data
+        return data
 
 
 # unit test

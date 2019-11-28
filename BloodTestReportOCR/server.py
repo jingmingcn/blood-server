@@ -16,6 +16,9 @@ from werkzeug.utils import secure_filename
 
 import tf_predict
 from imageFilter import ImageFilter
+import joblib
+import sklearn
+import re
 
 app = Flask(__name__, static_url_path="")
 
@@ -24,7 +27,7 @@ app.config.from_object('config')
 
 # 连接数据库，并获取数据库对象
 db = MongoClient(app.config['DB_HOST'], app.config['DB_PORT']).test
-
+rf_model = joblib.load('model_save/model_1')
 
 # 将矫正后图片与图片识别结果（JSON）存入数据库
 def save_file(file_str, f, report_data):
@@ -108,19 +111,42 @@ def image_upload():
     imgfile.write(base64.decodebytes(base64image.encode()))
     imgfile.close()
     
-    img_read = open(fileName,'rb')
+    img_read = open(fileName, 'rb')
 
-    #print('{0},{1}'.format(base64image,fileName))
+    # print('{0},{1}'.format(base64image,fileName))
+    def get_pred_X(report_data):
+        X = [[]]
+        X_label = ["MCH","MCHC","MCV","MPV","BASO","BASO%","EOS","HB","PDW%","PLT","EOS%","WBC","NEU%","NEUT","PCT","RDW%","LYMPH","LYM%","MON","RBC","MON%","HCT","Sex","Age"]
+        for label in X_label:
+            for i in range(22):
+                alias = report_data['bloodtest'][i]['alias']
+                value = report_data['bloodtest'][i]['value']
+                if alias == label:
+                    if re.match(r'^-?\d+(?:\.\d+)?$', value):
+                        X[0].append(float(value))
+                    else:
+                        print(value)
+                        X[0].append(0)
+        X[0].append(report_data['profile']['gender']=='Man' if 0 else 1)
+        X[0].append(report_data['profile']['age'])
+        print(X)
+        return X
 
     img = cv2.imdecode(numpy.frombuffer(img_read.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
     report_data = ImageFilter(image=img).ocr(22)
-    if report_data == None:
+    if report_data is None:
         data = {
             "error": 1,
         }
         return jsonify(data)
     else:
-        json_response = json.dumps(report_data, ensure_ascii=False)
+        prob = rf_model.predict(get_pred_X(report_data=report_data))
+        print(type(prob))
+        report_data['bloodtest'].append({
+            'name':'诊断结果',
+            'value':str(prob)
+        })
+        json_response = json.dumps(report_data, ensure_ascii=False, indent=4)
         response = Response(json_response,content_type="application/json;charset=utf-8" )
         return response
 '''
