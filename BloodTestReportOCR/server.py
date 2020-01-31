@@ -143,8 +143,8 @@ def image_upload():
         prob = rf_model.predict(get_pred_X(report_data=report_data))
         print(type(prob))
         report_data['bloodtest'].append({
-            'name':'诊断结果',
-            'value':str(prob)
+            'name':'九种血液病初筛结果及预警',
+            'value': '非高危' if prob == 0 else '高危'
         })
         json_response = json.dumps(report_data, ensure_ascii=False, indent=4)
         response = Response(json_response,content_type="application/json;charset=utf-8" )

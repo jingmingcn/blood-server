@@ -15,6 +15,7 @@ import pytesseract
 import imgproc
 from PIL import Image
 from matplotlib import pyplot as plt
+import joblib
 
 default = [3, 70, 30, 0.7, 0.0001]
 
@@ -328,7 +329,6 @@ class ImageFilter:
                 getobjname(int(i+13), 535, startpoint[1])
                 getobjdata(int(i+13), startpoint[0], startpoint[1])
                 startpoint[1] = startpoint[1] + 40
-                
 
         #正常结束返回0
         return 0
@@ -368,6 +368,7 @@ class ImageFilter:
             image = read('temp_pics/data' + str(i) + '.jpg')
             image = imgproc.digitsimg(image)
             digtitstr = image_to_string(image)
+            print(digtitstr)
             digtitstr = digtitstr.replace(" ", '')
             digtitstr = digtitstr.replace("-", '')
             digtitstr = digtitstr.strip(".")
