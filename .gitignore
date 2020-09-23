@@ -103,3 +103,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 BloodTestReportOCR/temp_pics/*
+.DS_Store
+.vscode/settings.json

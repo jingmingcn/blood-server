@@ -5,9 +5,9 @@ JSON_AS_ASCII = False
 DB_HOST = 'localhost'
 DB_PORT = 27017
 
-SERVER_HOST = '192.168.0.102'
+SERVER_HOST = '192.168.0.117'
 SERVER_PORT = 5000
 
-DEBUG=True
+DEBUG = True
 
-TEMP_PATH='temp_pics/'
+TEMP_PATH = 'temp_pics/'
