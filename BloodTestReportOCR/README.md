@@ -11,7 +11,7 @@ sudo apt-get install python-numpy # http://www.numpy.org/
 # 安装opencv
 sudo apt-get install python-opencv # http://opencv.org/
 
-##安装OCR和预处理相关依赖
+# 安装OCR和预处理相关依赖
 sudo apt-get install tesseract-ocr
 sudo pip install pytesseract
 sudo apt-get install python-tk
@@ -22,7 +22,20 @@ sudo pip install Flask
 sudo apt-get install mongodb # 如果找不到可以先sudo apt-get update
 sudo service mongodb started
 sudo pip install pymongo
+
+# 安装其它依赖库
+pip install opencv-python
+pip install tensorflow
+pip install matplotlib
+pip install joblib
+pip install -U scikit-learn==0.21.3
 ```
+
+
+
+
+
+
 
 ## 运行
 

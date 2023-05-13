@@ -55,11 +55,21 @@ class ImageFilter:
         
         img_sp = self.img.shape
         ref_lenth = img_sp[0] * img_sp[1] * ref_lenth_multiplier
+
         img_gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        cv2.imwrite(self.output_path + 'step-1-gray.jpg', img_gray)
+
         img_gb = cv2.GaussianBlur(img_gray, (gb_param, gb_param), 0)
+        cv2.imwrite(self.output_path + 'step-2-gaussianblur.jpg', img_gb)
+
         closed = cv2.morphologyEx(img_gb, cv2.MORPH_CLOSE, kernel)
+        cv2.imwrite(self.output_path + 'step-3-closed.jpg', closed)
+
         opened = cv2.morphologyEx(closed, cv2.MORPH_OPEN, kernel)
+        cv2.imwrite(self.output_path + 'step-4-opened.jpg', opened)
+
         edges = cv2.Canny(opened, canny_param_lower , canny_param_upper)
+        cv2.imwrite(self.output_path + 'step-5-CannyEdgeDetection.jpg', edges)
         
         # plt.subplot(121),plt.imshow(self.img,cmap = 'gray')
         # plt.title('Original Image'), plt.xticks([]), plt.yticks([])
@@ -68,7 +78,12 @@ class ImageFilter:
         # plt.show()
         
         # 调用findContours提取轮廓
+        
         contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        blank_gray_image = np.full((self.img.shape[0], self.img.shape[1]), 255, dtype=np.uint8)
+        cv2.drawContours(blank_gray_image, contours, -1, (0,255,0), 3)
+        cv2.imwrite(self.output_path + 'step-6-findContours.jpg', blank_gray_image)
 
         def getbox(i):
             rect = cv2.minAreaRect(contours[i])
@@ -170,7 +185,11 @@ class ImageFilter:
             dis.append([distance_line(i, j), i, j])
             dis.append([distance_line(j, k), j, k])
             dis.append([distance_line(k, i), k, i])
-            dis.sort()
+
+            print(dis)
+            dis.sort(key=lambda x: x[0])
+            print(dis)
+
             if dis[0][1] is dis[2][2]:
                 return dis[0][1], dis[2][1]
             if dis[0][2] is dis[2][1]:
@@ -208,7 +227,7 @@ class ImageFilter:
         ref_angle = 1
         if detectmiss(line, line_lower, ref_angle):
             print ("it is not a complete Report!")
-            return None
+            # return None
 
         # 由表头和表尾确定目标区域的位置
 
@@ -252,6 +271,8 @@ class ImageFilter:
 
         #输出透视变换后的图片
         cv2.imwrite(self.output_path + 'region.jpg', self.PerspectiveImg)
+
+        cv2.imwrite(self.output_path + 'step-7-warpPerspective.jpg', self.PerspectiveImg)
         return self.PerspectiveImg
         
     '''
@@ -379,7 +400,7 @@ class ImageFilter:
 
 # unit test
 if __name__ == '__main__':
-    image = cv2.imread("origin_pics/bloodtestreport1.jpg")
+    image = cv2.imread("origin_pics/2.jpg")
     imageFilter = ImageFilter(image=image) # 可以传入一个opencv格式打开的图片
     print(imageFilter.ocr(22))
 
