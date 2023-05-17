@@ -284,8 +284,8 @@ class ImageFilter:
         
         # Line thickness of 2 px
         thickness = 2
-        image_rect = image.copy()
-        image_rect = cv2.polylines(image, [pts],isClosed, color, thickness)
+        image_rect = self.img.copy()
+        image_rect = cv2.polylines(self.img, [pts],isClosed, color, thickness)
         cv2.imwrite(self.output_path + 'step-7-2-rect.jpg', image_rect)
 
         #使用透视变换将表格区域转换为一个1000*760的图
