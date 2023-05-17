@@ -101,11 +101,18 @@ class ImageFilter:
 
         # 筛选出对角线足够大的几个轮廓
         found = []
+        contours_reserved = []
         for i in range(len(contours)):
             box = getbox(i)
             distance_arr = distance(box)
             if distance_arr > ref_lenth:
                 found.append([i, box])
+                contours_reserved.append(contours[i])
+
+        blank_gray_image = np.full((self.img.shape[0], self.img.shape[1]), 255, dtype=np.uint8)
+        cv2.drawContours(blank_gray_image, contours_reserved, -1, (0,255,0), 3)
+        cv2.imwrite(self.output_path + 'step-7-contours-filter.jpg', blank_gray_image)
+        
 
         def getline(box):
             if np.dot(box[1]-box[2],box[1]-box[2]) < np.dot(box[0]-box[1],box[0]-box[1]):
@@ -186,9 +193,7 @@ class ImageFilter:
             dis.append([distance_line(j, k), j, k])
             dis.append([distance_line(k, i), k, i])
 
-            print(dis)
             dis.sort(key=lambda x: x[0])
-            print(dis)
 
             if dis[0][1] is dis[2][2]:
                 return dis[0][1], dis[2][1]
@@ -264,6 +269,24 @@ class ImageFilter:
                             [0, 760],
                             [1000, 760]
                             ],np.float32)
+        
+        pts = np.array([
+                          [line_upper[0][0], line_upper[0][1]],
+                          [line_upper[1][0], line_upper[1][1]], 
+                          [line_lower[1][0], line_lower[1][1]],
+                          [line_lower[0][0], line_lower[0][1]]
+                          ], np.int32)
+    
+        pts = pts.reshape((-1, 1, 2))
+        isClosed = True
+        # Blue color in BGR
+        color = (255, 0, 0)
+        
+        # Line thickness of 2 px
+        thickness = 2
+        image_rect = image.copy()
+        image_rect = cv2.polylines(image, [pts],isClosed, color, thickness)
+        cv2.imwrite(self.output_path + 'step-7-2-rect.jpg', image_rect)
 
         #使用透视变换将表格区域转换为一个1000*760的图
         PerspectiveMatrix = cv2.getPerspectiveTransform(points,standard)
@@ -272,7 +295,7 @@ class ImageFilter:
         #输出透视变换后的图片
         cv2.imwrite(self.output_path + 'region.jpg', self.PerspectiveImg)
 
-        cv2.imwrite(self.output_path + 'step-7-warpPerspective.jpg', self.PerspectiveImg)
+        cv2.imwrite(self.output_path + 'step-8-warpPerspective.jpg', self.PerspectiveImg)
         return self.PerspectiveImg
         
     '''
@@ -400,7 +423,7 @@ class ImageFilter:
 
 # unit test
 if __name__ == '__main__':
-    image = cv2.imread("origin_pics/2.jpg")
+    image = cv2.imread("origin_pics/train_1.jpg")
     imageFilter = ImageFilter(image=image) # 可以传入一个opencv格式打开的图片
     print(imageFilter.ocr(22))
 

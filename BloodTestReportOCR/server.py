@@ -45,6 +45,11 @@ def save_file(file_str, f, report_data):
     db.files.save(c)
     return c['_id'], c['filename']
 
+# ----------------------------------------------------------------
+#  Test Page
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
