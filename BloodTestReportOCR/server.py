@@ -151,6 +151,7 @@ def image_upload():
             'name':'九种血液病初筛结果及预警',
             'value': '非高危' if prob == 0 else '高危'
         })
+        report_data['result'] = '非高危' if prob == 0 else '高危'
         json_response = json.dumps(report_data, ensure_ascii=False, indent=4)
         response = Response(json_response,content_type="application/json;charset=utf-8" )
         return response
