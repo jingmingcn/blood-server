@@ -357,22 +357,24 @@ class ImageFilter:
             filename = self.output_path + 'data' + str(i) + '.jpg'
             cv2.imwrite(filename, region_roi)
 
+        line_h = 41
+
         #输出图片
         if num <= 13 and num > 0:
             for i in range(num):
                 getobjname(int(i), 25, startpoint[1])
                 getobjdata(int(i), startpoint[0], startpoint[1])
-                startpoint[1] = startpoint[1] + 40
+                startpoint[1] = startpoint[1] + line_h
         elif num > 13:
             for i in range(13):
                 getobjname(int(i), 25, startpoint[1])
                 getobjdata(int(i), startpoint[0], startpoint[1])
-                startpoint[1] = startpoint[1] + 40
+                startpoint[1] = startpoint[1] + line_h
             startpoint = [700, 135]
             for i in range(num-13):
                 getobjname(int(i+13), 535, startpoint[1])
                 getobjdata(int(i+13), startpoint[0], startpoint[1])
-                startpoint[1] = startpoint[1] + 40
+                startpoint[1] = startpoint[1] + line_h
 
         #正常结束返回0
         return 0
@@ -402,7 +404,7 @@ class ImageFilter:
             image = cv2.imread(url)
             return image
         # load json example
-        with open('bloodtestdata.json') as json_file:
+        with open('bloodtestdata.json','rb') as json_file:
             data = json.load(json_file)
 
         # 识别检测项目编号及数字
@@ -410,7 +412,7 @@ class ImageFilter:
             item = read('temp_pics/p' + str(i) + '.jpg')
             item_num = classifier.getItemNum(item)
             image = read('temp_pics/data' + str(i) + '.jpg')
-            image = imgproc.digitsimg(image)
+      #      image = imgproc.digitsimg(image)
             digtitstr = image_to_string(image)
             print(digtitstr)
             digtitstr = digtitstr.replace(" ", '')
