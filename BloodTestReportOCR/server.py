@@ -19,6 +19,7 @@ from imageFilter import ImageFilter
 import joblib
 import sklearn
 import re
+import pickle as pk
 
 app = Flask(__name__, static_url_path="")
 
@@ -28,6 +29,25 @@ app.config.from_object('config')
 # 连接数据库，并获取数据库对象
 db = MongoClient(app.config['DB_HOST'], app.config['DB_PORT']).test
 rf_model = joblib.load('model_save/model_1')
+
+# return 0 as positive, 1 as negative
+# sex 0 as 男, 1 as 女
+lgbm_2class_np = pk.load(open("model/gbm_2class_np.pkl", "rb"))
+
+# return  0-8对应
+# ['再生障碍性贫血\xa0NOS' '噬血细胞综合症' '多发性骨髓瘤[卡勒病]\xa0(M97320/3)' '急性淋巴细胞白血病'
+# '急性髓样白血病' '淋巴瘤' '血小板减少性紫癜' '过敏性紫癜[亨诺克(－舍恩莱因)紫癜]' '骨髓增生异常综合征']
+lgbm_9class_positive = pk.load(open("model/lgbm_9class_positive.pkl", "rb"))
+
+diseases = ['再生障碍性贫血', 
+            '噬血细胞综合症', 
+            '多发性骨髓瘤', 
+            '急性淋巴细胞白血病',
+            '急性髓样白血病',
+            '淋巴瘤',
+            '血小板减少性紫癜',
+            '过敏性紫癜',
+            '骨髓增生异常综合征']
 
 # 将矫正后图片与图片识别结果（JSON）存入数据库
 def save_file(file_str, f, report_data):
@@ -132,9 +152,9 @@ def image_upload():
                     else:
                         print(value)
                         X[0].append(0)
-        X[0].append(report_data['profile']['gender']=='Man' if 0 else 1)
+        X[0].append(report_data['profile']['gender']=='男' if 0 else 1)
         X[0].append(report_data['profile']['age'])
-        print(X)
+        
         return X
 
     img = cv2.imdecode(numpy.frombuffer(img_read.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
@@ -145,16 +165,32 @@ def image_upload():
         }
         return jsonify(data)
     else:
-        prob = rf_model.predict(get_pred_X(report_data=report_data))
-        print(type(prob))
-        report_data['bloodtest'].append({
-            'name':'九种血液病初筛结果及预警',
-            'value': '非高危' if prob == 0 else '高危'
-        })
-        report_data['result'] = '非高危' if prob == 0 else '高危'
+        # prob = rf_model.predict(get_pred_X(report_data=report_data))
+        # print(type(prob))
+        # report_data['bloodtest'].append({
+        #     'name':'九种血液病初筛结果及预警',
+        #     'value': '非高危' if prob == 0 else '高危'
+        # })
+        # report_data['result'] = '非高危' if prob == 0 else '高危'
+        # json_response = json.dumps(report_data, ensure_ascii=False, indent=4)
+        # response = Response(json_response,content_type="application/json;charset=utf-8" )
+        # return response
+        
+        predictions = lgbm_2class_np.predict(get_pred_X(report_data))
+
+        if predictions[0] == 1:
+            report_data['result'] = 0
+            report_data['label'] = '健康'
+            
+        else:
+            predictions = lgbm_9class_positive.predict(get_pred_X(report_data))
+            report_data['result'] = 1
+            report_data['label'] = diseases[int(predictions[0])]
+            
         json_response = json.dumps(report_data, ensure_ascii=False, indent=4)
         response = Response(json_response,content_type="application/json;charset=utf-8" )
         return response
+
 '''
     根据图像oid，在mongodb中查询，并返回Binary对象
 '''

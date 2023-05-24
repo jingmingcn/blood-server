@@ -29,6 +29,7 @@ pip install tensorflow
 pip install matplotlib
 pip install joblib
 pip install -U scikit-learn==0.21.3
+pip install lightgbm
 ```
 
 
