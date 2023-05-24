@@ -162,6 +162,7 @@ def image_upload():
 
     for i in range(22):
         value = report_data['bloodtest'][i]['value']
+        value = float(value)
         if value >= report_data['bloodtest'][i]['min'] and value <= report_data['bloodtest'][i]['max']:
             report_data['bloodtest'][i]['warn'] = 0
         else :
