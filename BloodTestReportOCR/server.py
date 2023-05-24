@@ -160,14 +160,6 @@ def image_upload():
     img = cv2.imdecode(numpy.frombuffer(img_read.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
     report_data = ImageFilter(image=img).ocr(22)
 
-    for i in range(22):
-        value = report_data['bloodtest'][i]['value']
-        value = float(value)
-        if value >= report_data['bloodtest'][i]['min'] and value <= report_data['bloodtest'][i]['max']:
-            report_data['bloodtest'][i]['warn'] = 0
-        else :
-            report_data['bloodtest'][i]['warn'] = 1
-    
     if report_data is None:
         data = {
             "error": 1,
@@ -184,6 +176,14 @@ def image_upload():
         # json_response = json.dumps(report_data, ensure_ascii=False, indent=4)
         # response = Response(json_response,content_type="application/json;charset=utf-8" )
         # return response
+
+        # for i in range(22):
+        #     value = report_data['bloodtest'][i]['value']
+        #     value = float(value)
+        #     if value >= report_data['bloodtest'][i]['min'] and value <= report_data['bloodtest'][i]['max']:
+        #         report_data['bloodtest'][i]['warn'] = 0
+        #     else :
+        #         report_data['bloodtest'][i]['warn'] = 1
         
         predictions = lgbm_2class_np.predict(get_pred_X(report_data))
 
