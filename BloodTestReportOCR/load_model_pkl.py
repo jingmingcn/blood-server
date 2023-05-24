@@ -61,4 +61,5 @@ if __name__ == '__main__':
     model = pickle.load(open('model/gbm_2class_np.pkl','rb'))
     print(model)
     predictions = model.predict(X)
-    print(predictions)
+    print(type(predictions[0]))
+    print(predictions[0]==0)

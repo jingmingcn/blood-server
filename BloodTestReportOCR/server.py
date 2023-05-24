@@ -159,6 +159,14 @@ def image_upload():
 
     img = cv2.imdecode(numpy.frombuffer(img_read.read(), numpy.uint8), cv2.IMREAD_UNCHANGED)
     report_data = ImageFilter(image=img).ocr(22)
+
+    for i in range(22):
+        value = report_data['bloodtest'][i]['value']
+        if value >= report_data['bloodtest'][i]['min'] and value <= report_data['bloodtest'][i]['max']:
+            report_data['bloodtest'][i]['warn'] = 0
+        else :
+            report_data['bloodtest'][i]['warn'] = 1
+    
     if report_data is None:
         data = {
             "error": 1,
