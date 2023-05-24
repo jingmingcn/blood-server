@@ -178,12 +178,15 @@ def image_upload():
         
         predictions = lgbm_2class_np.predict(get_pred_X(report_data))
 
+        print(predictions)
+        print(predictions[0] == 1)
+
         if predictions[0] == 1:
             report_data['result'] = 0
             report_data['label'] = '健康'
-            
         else:
             predictions = lgbm_9class_positive.predict(get_pred_X(report_data))
+            print(predictions)
             report_data['result'] = 1
             report_data['label'] = diseases[int(predictions[0])]
             
