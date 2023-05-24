@@ -177,13 +177,17 @@ def image_upload():
         # response = Response(json_response,content_type="application/json;charset=utf-8" )
         # return response
 
-        # for i in range(22):
-        #     value = report_data['bloodtest'][i]['value']
-        #     value = float(value)
-        #     if value >= report_data['bloodtest'][i]['min'] and value <= report_data['bloodtest'][i]['max']:
-        #         report_data['bloodtest'][i]['warn'] = 0
-        #     else :
-        #         report_data['bloodtest'][i]['warn'] = 1
+        for i in range(22):
+            value = report_data['bloodtest'][i]['value']
+            try:
+                value = float(value)
+            except ValueError:
+               value = 0.0
+           
+            if value >= report_data['bloodtest'][i]['min'] and value <= report_data['bloodtest'][i]['max']:
+                report_data['bloodtest'][i]['warn'] = 0
+            else :
+                report_data['bloodtest'][i]['warn'] = 1
         
         predictions = lgbm_2class_np.predict(get_pred_X(report_data))
 
