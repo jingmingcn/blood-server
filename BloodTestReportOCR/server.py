@@ -28,7 +28,7 @@ app.config.from_object('config')
 
 # 连接数据库，并获取数据库对象
 db = MongoClient(app.config['DB_HOST'], app.config['DB_PORT']).test
-rf_model = joblib.load('model_save/model_1')
+#rf_model = joblib.load('model_save/model_1')
 
 # return 0 as positive, 1 as negative
 # sex 0 as 男, 1 as 女
@@ -37,7 +37,7 @@ lgbm_2class_np = pk.load(open("model/gbm_2class_np.pkl", "rb"))
 # return  0-8对应
 # ['再生障碍性贫血\xa0NOS' '噬血细胞综合症' '多发性骨髓瘤[卡勒病]\xa0(M97320/3)' '急性淋巴细胞白血病'
 # '急性髓样白血病' '淋巴瘤' '血小板减少性紫癜' '过敏性紫癜[亨诺克(－舍恩莱因)紫癜]' '骨髓增生异常综合征']
-lgbm_9class_positive = pk.load(open("model/lgbm_9class_positive.pkl", "rb"))
+lgbm_9class_positive = pk.load(open("model/gbm_9class_positive.pkl", "rb"))
 
 diseases = ['再生障碍性贫血', 
             '噬血细胞综合症', 
