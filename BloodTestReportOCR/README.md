@@ -29,6 +29,7 @@ pip install tensorflow
 pip install matplotlib
 pip install joblib
 pip install -U scikit-learn==0.21.3
+pip install lightgbm
 ```
 
 
@@ -117,3 +118,11 @@ p1是高斯模糊的参数，p2和p3是canny边缘检测的高低阈值，p4和p
 
 #### digits
 将该文件替换Tesseract-OCR\tessdata\configs中的digits
+
+
+
+可视化模型决策树
+
+java -cp h2o.jar hex.genmodel.tools.PrintMojo --tree 0 -i model.zip -o model.gv -f 20 -d 3
+dot -Tpng model.gv -o model.png
+open model.png
