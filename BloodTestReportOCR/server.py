@@ -147,11 +147,15 @@ def image_upload():
                 alias = report_data['bloodtest'][i]['alias']
                 value = report_data['bloodtest'][i]['value']
                 if alias == label:
-                    if re.match(r'^-?\d+(?:\.\d+)?$', value):
-                        X[0].append(float(value))
-                    else:
-                        print(f'value is not a valid:'+value)
-                        X[0].append(0)
+                    try:
+                         X[0].append(float(value))
+                    except ValueError:
+                         X[0].append(0)
+                    # if re.match(r'^-?\d+(?:\.\d+)?$', value):
+                    #     X[0].append(float(value))
+                    # else:
+                    #     X[0].append(0)
+
         X[0].append(report_data['profile']['gender']=='男' if 0 else 1)
         X[0].append(report_data['profile']['age'])
         
