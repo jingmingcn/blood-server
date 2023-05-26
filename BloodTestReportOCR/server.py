@@ -150,7 +150,7 @@ def image_upload():
                     if re.match(r'^-?\d+(?:\.\d+)?$', value):
                         X[0].append(float(value))
                     else:
-                        print(value)
+                        print(f'value is not a valid:'+value)
                         X[0].append(0)
         X[0].append(report_data['profile']['gender']=='男' if 0 else 1)
         X[0].append(report_data['profile']['age'])
