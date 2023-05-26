@@ -425,7 +425,7 @@ class ImageFilter:
             print(digtitstr)
             data['bloodtest'][item_num]['value'] = digtitstr
         
-        data['profile']['gender'] = image_to_string(read('temp_pics/gender.jpg'),False).replace(" ", '').replace("\n", '').strip()
+        data['profile']['gender'] = image_to_string(read('temp_pics/gender.jpg'),True).replace(" ", '').replace("\n", '').strip()
         data['profile']['age'] = image_to_string(read('temp_pics/age.jpg'),True).replace(" ", '').replace("\n", '')
 
         return data
