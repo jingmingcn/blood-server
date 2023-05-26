@@ -28,7 +28,7 @@ if __name__ == "__main__":
             '过敏性紫癜',
             '骨髓增生异常综合征']
 
-    img_read = open('origin_pics/t1.jpg', 'rb')
+    img_read = open('报告单/test1-9/test9再生障碍性贫血_01.jpg', 'rb')
 
     # print('{0},{1}'.format(base64image,fileName))
     def get_pred_X(report_data):

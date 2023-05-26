@@ -192,6 +192,7 @@ def image_upload():
         X = get_pred_X(report_data)
         
         predictions = lgbm_2class_np.predict(X)
+        
         print(f'X is '+str(X))
         print(f'predictions is ' + str(predictions), flush=True)
 
