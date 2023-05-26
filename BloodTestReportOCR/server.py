@@ -39,7 +39,7 @@ lgbm_2class_np = pk.load(open("model/gbm_2class_np.pkl", "rb"))
 # '急性髓样白血病' '淋巴瘤' '血小板减少性紫癜' '过敏性紫癜[亨诺克(－舍恩莱因)紫癜]' '骨髓增生异常综合征']
 lgbm_9class_positive = pk.load(open("model/gbm_9class_positive.pkl", "rb"))
 
-diseases = ['','再生障碍性贫血', 
+diseases = ['再生障碍性贫血', 
             '噬血细胞综合症', 
             '多发性骨髓瘤', 
             '急性淋巴细胞白血病',
@@ -191,15 +191,14 @@ def image_upload():
         
         predictions = lgbm_2class_np.predict(get_pred_X(report_data))
 
-        print(predictions)
-        print(predictions[0] == 1)
+        print(f'predictions is ' + str(predictions), flush=True)
 
         if predictions[0] == 1:
             report_data['result'] = 0
             report_data['label'] = '健康'
         else:
             predictions = lgbm_9class_positive.predict(get_pred_X(report_data))
-            print(predictions)
+            print(f'predictions is ' + str(predictions), flush=True)
             report_data['result'] = 1
             report_data['label'] = diseases[int(predictions[0])]
             
