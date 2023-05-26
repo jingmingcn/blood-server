@@ -422,7 +422,6 @@ class ImageFilter:
             digtitstr = digtitstr.replace("-", '')
             digtitstr = digtitstr.replace("\n", '')
             digtitstr = digtitstr.strip(".")
-            print(digtitstr)
             data['bloodtest'][item_num]['value'] = digtitstr
         
         data['profile']['gender'] = image_to_string(read('temp_pics/gender.jpg'),True).replace(" ", '').replace("\n", '').strip()

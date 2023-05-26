@@ -188,16 +188,18 @@ def image_upload():
                 report_data['bloodtest'][i]['warn'] = 0
             else :
                 report_data['bloodtest'][i]['warn'] = 1
-        
-        predictions = lgbm_2class_np.predict(get_pred_X(report_data))
 
+        X = get_pred_X(report_data)
+        
+        predictions = lgbm_2class_np.predict(X)
+        print(f'X is '+str(X))
         print(f'predictions is ' + str(predictions), flush=True)
 
         if predictions[0] == 1:
             report_data['result'] = 0
             report_data['label'] = '健康'
         else:
-            predictions = lgbm_9class_positive.predict(get_pred_X(report_data))
+            predictions = lgbm_9class_positive.predict(X)
             print(f'predictions is ' + str(predictions), flush=True)
             report_data['result'] = 1
             report_data['label'] = diseases[int(predictions[0])]
