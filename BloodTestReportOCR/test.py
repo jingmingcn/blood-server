@@ -113,7 +113,10 @@ if __name__ == "__main__":
         # X = [[29.8, 333.0, 89.4, 9.0, 0.02, 0.2, 0.0, 124.0, 9.5, 217, 0.0, 12.15, 84.7, 10.29, 0.19, 13.0, 1.3, 10.7, 0.54, 4.16, 4.4, 37.2, 1, 57]]
         # X = [[29,335,86.6,11.7,0.03,0.4,0.22,171,15.9,168,2.9,7.46,49,3.63,0.2,13.2,3.05,40.9,0.51,5.9,6.8,51.1,1,27]]
 
+        X = get_pred_X(report_data)
+
         print(get_pred_X(report_data))
+        print(f'data is '+str(X))
         
         predictions = lgbm_2class_np.predict(get_pred_X(report_data))
         # predictions = lgbm_2class_np.predict(X)

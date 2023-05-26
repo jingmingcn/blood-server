@@ -166,23 +166,12 @@ def image_upload():
         }
         return jsonify(data)
     else:
-        # prob = rf_model.predict(get_pred_X(report_data=report_data))
-        # print(type(prob))
-        # report_data['bloodtest'].append({
-        #     'name':'九种血液病初筛结果及预警',
-        #     'value': '非高危' if prob == 0 else '高危'
-        # })
-        # report_data['result'] = '非高危' if prob == 0 else '高危'
-        # json_response = json.dumps(report_data, ensure_ascii=False, indent=4)
-        # response = Response(json_response,content_type="application/json;charset=utf-8" )
-        # return response
-
         for i in range(22):
             value = report_data['bloodtest'][i]['value']
             try:
                 value = float(value)
             except ValueError:
-               value = 0.0
+                value = 0.0
            
             if value >= report_data['bloodtest'][i]['min'] and value <= report_data['bloodtest'][i]['max']:
                 report_data['bloodtest'][i]['warn'] = 0
