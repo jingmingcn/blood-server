@@ -15,7 +15,7 @@ from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 
 import tf_predict
-from imageFilter import ImageFilter
+from imageFilter_v import ImageFilter
 import joblib
 import sklearn
 import re
