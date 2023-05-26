@@ -105,3 +105,4 @@ venv.bak/
 BloodTestReportOCR/temp_pics/*
 .DS_Store
 .vscode/settings.json
+~$*.docx
